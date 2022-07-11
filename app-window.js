@@ -50,6 +50,3 @@ w.innerHTML = "<div style='position:absolute;top:0px;left:0px;height:30px;width:
 document.body.appendChild(w);
 document.body.style.overflow = "hidden";
 }
-
-
-launch("x")
