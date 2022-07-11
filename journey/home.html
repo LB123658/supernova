@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Journey Afoot - Home</title>
+<style>
+body {
+user-select: none;
+cursor: default;
+background: lightblue;
+animation: fade 60s infinite;
+}
+::-webkit-scrollbar {
+display: none;
+}
+@keyframes fade {
+10% {background: violet}
+20% {background: #ed7777}
+30% {background: #edb677}
+40% {background: #ede977}
+50% {background: #85de62}
+60% {background: lightblue}
+70% {background: lightgrey}
+80% {background: pink}
+90% {background: white}
+}
+
+.div {
+background: rgba(0, 0, 0, 0.3);
+font-family: arial;
+color: white;
+font-size: 16px;
+padding: 5px;
+border-radius: 5px;
+margin-bottom: 10px;
+transition: 0.3s background;
+}
+.div:hover {
+background: rgba(0, 0, 0, 0.25);
+}
+.div button {
+height: 40px;
+background: rgba(0, 0, 0, 0.6);
+font-family: arial;
+color: white;
+font-size: 16px;
+border-radius: 5px;
+min-width: 100px;
+margin-right: 5px;
+border: none;
+}
+.div button:hover {
+transform: scale(1.05);
+background: lightgrey;
+color: grey;
+}
+</style>
+</head>
+<body>
+<div class="div">
+<h2>Journey Afoot</h2>
+<p>Walk the world, complete quests, and upgrade your character.</p>
+<button onclick="alert('Opening game...');window.open('game.html','_self');">Begin journey</button>
+</div>
+
+<div class="div">
+<h2>Steps</h2>
+<p id="steps">Current steps: 0</p>
+</div>
+
+<div class="div">
+<h2>Distance</h2>
+<p id="distance">Current distance: 0 km</p>
+</div>
+
+<br><br>
+
+<div class="div">
+<h2>Upgrades (Coming soon)</h2>
+<p>Upgrade your character to get more access to better clothing, shoes, and accessories.</p>
+<button>Upgrade now</button>
+</div>
+
+<br><br>
+
+<div class="div">
+<h2>Maps (Coming soon)</h2>
+<p>Play different maps when you unlock them</p>
+</div>
+
+<div class="div">
+<h2>Mexico</h2>
+<p>Walk in Mexico</p>
+</div>
+
+<div class="div">
+<h2>Colombia</h2>
+<p>Walk in Colombia</p>
+</div>
+
+<div class="div">
+<h2>Albania</h2>
+<p>Walk in Albania</p>
+</div>
+
+<div class="div">
+<h2>Mauritania</h2>
+<p>Walk in Mauritania</p>
+</div>
+
+<div class="div">
+<h2>Kazakhstan</h2>
+<p>Walk in Kazakhstan</p>
+</div>
+
+<div class="div">
+<h2>Vanuatu</h2>
+<p>Walk in Vanuatu</p>
+</div>
+
+<br><br>
+
+<div class="div">
+<h2>Quit game</h2>
+<p>Exit the Journey Afoot game</p>
+<a href="index.html">
+<button>Quit</button>
+</a>
+</div>
+
+<script>
+if (localStorage.getItem("steps")) {
+document.getElementById("steps").innerHTML = "Current steps: " + localStorage.getItem("steps");
+document.getElementById("distance").innerHTML = "Current distance: " + localStorage.getItem("distance") + " km";
+}
+</script>
+</body>
+</html>

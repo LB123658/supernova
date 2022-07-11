@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Journey Afoot</title>
+<style>
+body {
+overflow: hidden;
+background: lightblue;
+user-select: none;
+cursor: default;
+}
+#data {
+position: absolute;
+top: 10px;
+left: 10px;
+padding: 5px;
+border-radius: 5px;
+background: rgba(0, 0, 0, 0.3);
+font-family: arial;
+color: white;
+font-size: 16px;
+}
+#character {
+position: fixed;
+top: 50%;
+left: 50%;
+height: 500px;
+width: 200px;
+margin: -250px -100px;
+text-align: center;
+user-select: none;
+transition: margin 0.5s;
+}
+#head {
+position: absolute;
+top: 5px;
+left: 55px;
+width: 90px;
+height: 90px;
+border-radius: 50%;
+background: grey;
+font-size: 40px;
+animation: head-movement 2s infinite;
+}
+#torso {
+position: absolute;
+top: 100px;
+left: 40px;
+width: 120px;
+background: grey;
+height: 160px;
+}
+#arm-left {
+position: absolute;
+top: 100px;
+left: 10px;
+width: 20px;
+height: 200px;
+background: grey;
+animation: left-arm 2s infinite;
+}
+#arm-right {
+position: absolute;
+top: 100px;
+right: 10px;
+width: 20px;
+height: 200px;
+background: grey;
+animation: right-arm 2s infinite;
+}
+#upper-leg-left {
+position: absolute;
+top: 265px;
+left: 40px;
+height: 120px;
+background: grey;
+width: 50px;
+animation: upper-left-leg 2s infinite;
+}
+#upper-leg-right {
+position: absolute;
+top: 265px;
+right: 40px;
+height: 120px;
+background: grey;
+width: 50px;
+animation: upper-right-leg 2s infinite;
+}
+#lower-leg-left {
+position: absolute;
+top: 390px;
+left: 45px;
+height: 105px;
+background: grey;
+width: 40px;
+animation: lower-left-leg 2s infinite;
+}
+#lower-leg-right {
+position: absolute;
+top: 390px;
+right: 45px;
+height: 105px;
+background: grey;
+width: 40px;
+animation: lower-right-leg 2s infinite;
+}
+@keyframes head-movement {
+50% {top:-5px;}
+}
+@keyframes left-arm {
+0% {height: 200px}
+50% {height: 150px; background-image: linear-gradient(grey, #383838);}
+100% {height: 200px}
+}
+@keyframes right-arm {
+0% {height: 150px; background-image: linear-gradient(grey, #383838);}
+50% {height: 200px}
+100% {height: 150px; background-image: linear-gradient(grey, #383838);}
+}
+@keyframes upper-left-leg {
+0% {height: 120px}
+50% {height: 80px; background-image: linear-gradient(grey, #383838);}
+100% {height: 120px}
+}
+@keyframes upper-right-leg {
+0% {height: 80px; background-image: linear-gradient(grey, #383838);}
+50% {height: 120px; background: grey;}
+100% {height: 80px; background-image: linear-gradient(grey, #383838);}
+}
+@keyframes lower-left-leg {
+0% {height: 120px}
+50% {height: 100px; background: #383838; top: 350px;}
+100% {height: 120px}
+}
+@keyframes lower-right-leg {
+0% {height: 100px; background: #383838; top: 350px;}
+50% {height: 120px; background: grey; top: 390px;}
+100% {height: 100px; background: #383838; top: 350px;}
+}
+
+#ground {
+position: fixed;
+top: 50%;
+margin: 250px -50px;
+left: 50%;
+width: 0;
+height: 0;
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+border-bottom: 100px solid #282828;
+z-index: -1;
+transform: scale(10);
+}
+#grass {
+position: fixed;
+top: 50%;
+left: 0px;
+width: 100%;
+height: 100%;
+z-index: -2;
+background: green;
+margin-top: -200px;
+}
+#quit-alert {
+position: fixed;
+top: 50%;
+left: 50%;
+min-height: 100px;
+width: 400px;
+margin: -50px -200px;
+background: rgba(0, 0, 0, 0.3);
+font-family: arial;
+color: white;
+font-size: 16px;
+padding: 5px;
+border-radius: 5px;
+text-align: justify;
+visibility: hidden;
+}
+#quit-alert button {
+height: 40px;
+background: rgba(0, 0, 0, 0.6);
+font-family: arial;
+color: white;
+font-size: 16px;
+border-radius: 5px;
+min-width: 100px;
+margin-right: 5px;
+border: none;
+}
+#quit-alert button:hover {
+transform: scale(1.05);
+background: lightgrey;
+color: grey;
+}
+</style>
+</head>
+<body>
+<div id="character">
+<div id="head"></div>
+<div id="torso"></div>
+<div id="upper-leg-left"></div>
+<div id="upper-leg-right"></div>
+<div id="lower-leg-left"></div>
+<div id="lower-leg-right"></div>
+<div id="arm-left"></div>
+<div id="arm-right"></div>
+</div>
+
+<div id="ground"></div>
+<div id="grass"></div>
+<span id="data">Calculating data</span>
+
+<div id="quit-alert">Are you sure you want to quit the game? Your progress will be saved. <br><br> <button onclick="document.getElementById('quit-alert').style.visibility='hidden';">Cancel</button> <button onclick="endGame()" id="quit-game-button">Quit</button></div>
+<script>
+document.body.onkeyup = function(e){  
+    if (e.key == "p"){
+        alert("Paused. Click \"OK\" to resume");
+    } else if (e.code == "Space") {
+        jump();
+    } else if (e.key == "q") {
+        document.getElementById("quit-alert").style.visibility = "visible";
+        document.getElementById("quit-game-button").focus();
+    }
+}
+function jump() {
+document.getElementById("character").style.margin = "-350px -100px";
+setTimeout(function() {document.getElementById("character").style.margin = "-250px -100px";},500);
+}
+
+var int = setInterval(count, 1000);
+var steps = 0;
+function count() { 
+steps++;
+document.getElementById("data").innerHTML = "Steps: " + steps + " | Distance: " + Math.floor(steps * 0.00076219512) + " km";
+}
+
+function endGame() {
+clearInterval(int);
+var content = "<p>Walking stats<br><br>Steps: " + steps + "<br>Distance: " + steps * 0.00076219512 + " km<br>Time in game: " + steps / 60 + " min</p><a href='home.html'><button>Continue</button></a>";
+document.getElementById("character").remove();
+document.getElementById("data").remove();
+document.getElementById("quit-alert").innerHTML = content;
+localStorage.setItem("steps", steps);
+localStorage.setItem("distance", steps * 0.00076219512);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Journey Afoot</title>
+<style>
+body {
+user-select: none;
+cursor: default;
+background: lightblue;
+animation: fade 30s infinite;
+}
+@keyframes fade {
+10% {background: violet}
+20% {background: #ed7777}
+30% {background: #edb677}
+40% {background: #ede977}
+50% {background: #85de62}
+60% {background: lightblue}
+70% {background: lightgrey}
+80% {background: pink}
+90% {background: white}
+}
+#character {
+position: fixed;
+top: 50%;
+left: 50%;
+height: 500px;
+width: 200px;
+margin: -250px -100px;
+text-align: center;
+user-select: none;
+}
+#head {
+position: absolute;
+top: 5px;
+left: 55px;
+width: 90px;
+height: 90px;
+border-radius: 50%;
+background: grey;
+font-size: 40px;
+}
+#torso {
+position: absolute;
+top: 100px;
+left: 40px;
+width: 120px;
+background: grey;
+height: 160px;
+}
+#arm-left {
+position: absolute;
+top: 100px;
+left: 10px;
+width: 20px;
+height: 200px;
+background: grey;
+}
+#arm-right {
+position: absolute;
+top: 100px;
+right: 10px;
+width: 20px;
+height: 200px;
+background: grey;
+}
+#upper-leg-left {
+position: absolute;
+top: 265px;
+left: 40px;
+height: 120px;
+background: grey;
+width: 50px;
+}
+#upper-leg-right {
+position: absolute;
+top: 265px;
+right: 40px;
+height: 120px;
+background: grey;
+width: 50px;
+}
+#lower-leg-left {
+position: absolute;
+top: 390px;
+left: 45px;
+height: 105px;
+background: grey;
+width: 40px;
+}
+#lower-leg-right {
+position: absolute;
+top: 390px;
+right: 45px;
+height: 105px;
+background: grey;
+width: 40px;
+}
+
+#alert {
+position: fixed;
+top: 50%;
+left: 50%;
+height: 180px;
+width: 400px;
+margin: -90px -200px;
+background: rgba(0, 0, 0, 0.3);
+font-family: arial;
+color: white;
+font-size: 16px;
+padding: 5px;
+border-radius: 5px;
+text-align: center;
+}
+#alert button {
+height: 40px;
+background: rgba(0, 0, 0, 0.6);
+font-family: arial;
+color: white;
+font-size: 16px;
+border-radius: 5px;
+min-width: 100px;
+margin-right: 5px;
+border: none;
+}
+#alert button:hover {
+transform: scale(1.05);
+background: lightgrey;
+color: grey;
+}
+</style>
+</head>
+<body>
+<div id="character">
+<div id="head"></div>
+<div id="torso"></div>
+<div id="upper-leg-left"></div>
+<div id="upper-leg-right"></div>
+<div id="lower-leg-left"></div>
+<div id="lower-leg-right"></div>
+<div id="arm-left"></div>
+<div id="arm-right"></div>
+</div>
+
+<div id="alert">
+<h2>Journey Afoot</h2>
+<p>Walk the world, complete quests, and upgrade your character.</p>
+<a href="home.html">
+<button title="Launch Journey Afoot">Launch game</button>
+</a>
+</div>
+</body>
+</html>
