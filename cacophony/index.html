@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="icon" href="favicon.png" type="image/png"/>
+<title>Cacophony, the alternative to big tech | Cacophony</title>
+<style>
+body {
+background: #2f3136;
+color: #dcddde;
+font-family: 'PT Sans', sans-serif;
+}
+:focus {
+outline: none;
+}
+::selection {
+background: #5869ea;
+}
+.dark {
+background: #202325;
+}
+.accent {
+background: #5869ea;
+}
+button {
+height: 40px;
+border-radius: 5px;
+padding-left: 10px;
+padding-right: 10px;
+margin: 5px;
+font-size: 22px;
+border: none;
+transition: background 0.4s, border-radius 0.4s;
+cursor: pointer;
+color: #dcddde;
+font-size: 20px;
+background: #535761;
+}
+button:hover {
+background: #43464d;
+}
+input {
+background: #202325;
+height: 40px;
+font-size: 22px;
+border-radius: 5px;
+cursor: default;
+border: none;
+color: #dcddde;
+font-family: 'PT Sans', sans-serif;
+font-size: 22px;
+}
+input:focus {
+cursor: auto;
+}
+.material-icons {
+float: right;
+}
+
+h1 {
+font-size: 40px;
+}
+p {
+font-size: 20px;
+}
+#content {
+position: absolute;
+top: 150px;
+left: 0px;
+width: 100%;
+text-align: center;
+}
+#footer {
+position: absolute;
+bottom: 0pc;
+left: 0px;
+width: 100%;
+text-align: center;
+user-select: none;
+cursor: default;
+color: #565a63;
+font-size: 14px;
+}
+#shadow {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+height: 100%;
+background: rgb(0, 0, 0, 0.4);
+z-index: 1;
+visibility: hidden;
+}
+#display {
+position: absolute;
+top: 50%;
+left: 50%;
+width: 400px;
+height: 300px;
+margin: -150px -200px;
+z-index: 2;
+border-radius: 5px;
+background: #2f3136;
+padding: 10px;
+visibility: hidden;
+}
+#display-content {
+margin-top: 5px;
+height: 220px;
+overflow: auto;
+}
+#display-content input {
+width: 395px;
+}
+</style>
+</head>
+<body>
+<div id="content">
+<h1><span class="accent">Cacophony</span>, the alternative to big tech</h1>
+<p>Find all the online tools you rely on everyday here with no tracking or data collection.</p>
+<br><br>
+<button class="accent" onclick="learnMore()">Learn more &nbsp;<span class="material-icons">help</span></button>
+<button class="accent" onclick="signIn()">Sign in &nbsp;<span class="material-icons">login</span></button>
+<button class="accent" onclick="createProfile()">Create profile &nbsp;<span class="material-icons">trending_up</span></button>
+</div>
+
+<p id="footer">Cacophony, the alternative to big tech - Updated June 2022</p>
+
+<div id="shadow" onclick="closeDisplay()"></div>
+
+<div id="display">
+<button onclick="closeDisplay()"><span class="material-icons">close</span></button>
+<div id="display-content">
+<p style="height: 200px; overflow: auto;">An error occurred. Try reloading the page.</p>
+</div>
+</div>
+<script>
+var display = document.getElementById("display");
+var shadow = document.getElementById("shadow");
+var displayContent = document.getElementById("display-content");
+
+function learnMore() {
+displayContent.innerHTML = "<p>Cacophony is a collection of useful online tools to edit documents, store files, save photos, write code, keep contacts, and especially, play games. It is completely independent and stores all of its information in your browser, never sharing it with anyone else. Cacophony is ad free and does not track you or store any data about your usage. This is the alternative to greedy tech corporations. Start today for free.</p>";
+shadow.style.visibility = "visible";
+display.style.visibility = "visible";
+}
+function signIn() {
+displayContent.innerHTML = "<p>Username</p><input type='text' autocomplete='off' placeholder='Username' id='sign-in-username'></input><br><p>Password</p><input type='password' autocomplete='off' placeholder='Password' id='sign-in-password'></input><br><br><button class='accent' onclick='verifyAccount()'>Sign in &nbsp; <span class='material-icons'>login</span></button>";
+shadow.style.visibility = "visible";
+display.style.visibility = "visible";
+}
+function createProfile() {
+displayContent.innerHTML = "<p>Username</p><input type='text' autocomplete='off' placeholder='Username' id='create-username'></input><br><p>Password</p><input type='password' autocomplete='off' placeholder='Password' id='create-password'></input><br><p>Email address</p><input type='text' autocomplete='off' placeholder='Email' id='create-email'></input><br><p>Phone number</p><input type='tel' autocomplete='off' placeholder='Number' id='create-number'></input><br><p>Your Cacophony profile is only visible to you</p><br><button class='accent' onclick='createAccount()'>Create your profile &nbsp; <span class='material-icons'>trending_up</span></button>";
+shadow.style.visibility = "visible";
+display.style.visibility = "visible";
+}
+function closeDisplay() {
+shadow.style.visibility = "hidden";
+display.style.visibility = "hidden";
+}
+
+//create account and sign in functions
+function createAccount() {
+var username = document.getElementById("create-username").value;
+var password = document.getElementById("create-password").value;
+var email = document.getElementById("create-email").value;
+var number = document.getElementById("create-number").value;
+localStorage.setItem("@" + username + "/password", password);
+console.log("Password saved");
+localStorage.setItem("@" + username + "/email", email);
+console.log("Email saved");
+localStorage.setItem("@" + username + "/number", number);
+console.log("Number saved");
+signIn();
+}
+function verifyAccount() {
+var username = document.getElementById("sign-in-username").value;
+var password = document.getElementById("sign-in-password").value;
+  if (password == localStorage.getItem("@" + username + "/password")) {
+    localStorage.setItem("user", "@" + username);
+    location.replace("app/#/@" + username);
+  } else {
+    alert("Password or username incorrect. Try again");
+  }
+}
+</script>
+</body>
+</html>
