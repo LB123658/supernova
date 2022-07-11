@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz@9..144&family=PT+Sans&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="icon" href="favicon.png" type="image/png"/>
+<title>Supernova Games</title>
+<style>
+body {
+background: #fdf6e2;
+}
+:focus {
+outline: none;
+}
+* {
+font-family: 'Fraunces', serif;
+}
+.pixel {
+font-family: 'Press Start 2P', cursive;
+}
+.sans-serif {
+font-family: 'PT Sans', sans-serif;
+}
+h1 {
+font-size: 50px;
+}
+#logo {
+position: absolute;
+top: 100px;
+left: 25%;
+width: 50%;
+text-align: center;
+}
+#title {
+width: 100%;
+height: 150px;
+background: rgb(235, 50, 35);
+font-size: 60px;
+border: none;
+margin-bottom: 20px;
+}
+#arrow {
+position: absolute;
+bottom: 10px;
+left: 50%;
+width: 100px;
+margin-left: -50px;
+color: rgb(235, 50, 35);
+user-select: none;
+text-align: center;
+font-size: 40px;
+}
+#games {
+position: absolute;
+top: 105%;
+height: 100px;
+width: 90%;
+left: 5%;
+padding-bottom: 50px;
+}
+#games div {
+background: rgb(235, 50, 35);
+border: none;
+text-align: left;
+font-size: 25px;
+transition: transform 0.3s;
+width: 100%;
+padding: 10px 5px;
+margin-left: -5px;
+margin-bottom: 10px;
+}
+#games div:hover {
+transform: scale(1.015);
+}
+.info {
+font-size: 16px;
+font-family: 'PT Sans', sans-serif;
+}
+.control {
+float: right;
+color: black;
+font-size: 30px;
+margin: 5px;
+cursor: pointer;
+transition: color 0.5s;
+}
+.control:hover {
+color: #fdf6e2;
+}
+.promotion {
+color: rgb(235, 50, 35);
+text-decoration: none;
+font-size: 20px;
+}
+.promotion:hover {
+color: black;
+}
+</style>
+</head>
+<body>
+<div id="logo">
+<button id="title">Supernova Games</button>
+<p id="caption">Free online games. Play them all.<br><br><a class="promotion" href="cacophony/index.html" title="Sign in with Cacophony">Sign in &gt;</a></p>
+</div>
+<span id="arrow" class="material-icons">keyboard_double_arrow_down</span>
+
+<div id="games">
+<h1>Available games</h1>
+</div>
+
+<script src="app-window.js"></script>
+<script>
+var div = document.getElementById("games");
+var shadow = document.getElementById("shadow");
+
+function generate(gameTitle,gameCaption,gameLink) {
+var x = document.createElement("div");
+x.innerHTML = gameTitle + "<br><span class='info'>" + gameCaption + "</span><span class='material-icons control' onclick='launch(\"" + gameLink + "\")' title='Play'>play_circle</span><a href='" + gameLink + "' target='_blank' title='Open in new tab'><span class='material-icons control'>launch</span></a>";
+div.appendChild(x);
+}
+
+
+generate("NEW: Galactic Quest","Discover planets and expand space exploration.","quest/index.html");
+generate("TeaBag","Brew virtual tea, collect teapots, and make money.","https://lb123658.github.io/tea");
+generate("Survival I","Survive landing on an island.","https://lb123658.github.io/Survival");
+generate("Survival II","Collect gold by jumping over obstacles to upgrade and expand your collection.","https://lb123658.github.io/game");
+generate("Goat Simulator","The original goat simulator.","https://lb123658.github.io/goat");
+generate("Goat Simulator Mobile","The original goat simulator mobile version.","https://lb123658.github.io/goat/ios");
+generate("Goat Simulator 2D","Upgraded 2D goat simulator","https://lb123658.github.io/goat/app");
+generate("Goat Simulator 3D","Goat skateboarding game.","https://lb123658.github.io/goat/3d");
+generate("Unkrafted","A simple survival game with building.","https://lb123658.github.io/unkrafted");
+
+document.getElementById("games").innerHTML = document.getElementById("games").innerHTML + "<br><br>";
+</script>
+</body>
+</html>
