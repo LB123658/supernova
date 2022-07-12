@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz@9..144&family=PT+Sans&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="icon" href="favicon.png" type="image/png"/>
+<title>Galactic Quest</title>
+<style>
+body {
+background: black;
+overflow: hidden;
+}
+:focus {
+outline: none;
+}
+* {
+font-family: 'Press Start 2P', cursive;
+line-height: 2;
+color: white;
+user-select: none;
+-webkit-user-select: none;
+}
+#loading {
+position: fixed;
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+text-align: center;
+background: black;
+z-index: 10;
+}
+#loading img {
+margin-top: 10%;
+height: 50%;
+}
+#story {
+position: fixed;
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+background: black;
+z-index: 9;
+}
+button {
+background: transparent;
+border-left: 1px solid white;
+border-top: 1px solid white;
+border-right: 1px solid grey;
+border-bottom: 1px solid grey;
+}
+button:hover {
+background: white;
+border: 1px solid white;
+color: black;
+}
+#sky-map {
+position: absolute;
+top: 0px;
+left: 0px;
+height: 80%;
+width: 80%;
+background: black;
+border: 3px solid white;
+}
+#log {
+position: absolute;
+top: 80%;
+left: 0px;
+width: 80%;
+height: 20%;
+border: 3px solid white;
+border-top: none;
+overflow: auto;
+}
+#log p {
+width: 90%;
+margin-left: 5%;
+}
+#sidebar {
+position: absolute;
+top: 0px;
+left: 80%;
+height: 100%;
+width: 20%;
+border: 3px solid white;
+border-left: none;
+}
+#sidebar p {
+width: 100%;
+text-align: center;
+font-size: 15px;
+}
+#planet-library {
+position: absolute;
+top: 50%;
+left: 0%;
+width: 100%;
+height: 50%;
+}
+.span-button {
+color: lightgrey;
+}
+.span-button:hover {
+background: white;
+color: black;
+}
+.planet {
+width: 200px;
+height: 200px;
+border-radius: 50%;
+overflow: hidden;
+z-index: 1;
+}
+.pixel {
+width: 20px;
+height: 20px;
+margin: 0px;
+border: none;
+padding: 0px;
+pointer-events: none;
+filter: blur(15px);
+}
+.planetShadow {
+width: 100%;
+height: 100%;
+border-radius: 50%;
+box-shadow: inset -25px -25px 40px rgba(0,0,0,0.8);
+background: transparent;
+}
+.star {
+transition: left 20s, bottom 20s;
+}
+.rocket {
+width: 0px; 
+height: 0px; 
+border-left: 50px solid transparent;
+border-right: 50px solid transparent;
+border-bottom: 50px solid grey;
+position: absolute;
+top: 55%;
+left: 50%;
+margin-left: -50px;
+z-index: 2;
+}
+</style>
+</head>
+<body>
+<div id="loading">
+<img src="loading.png"></img>
+</div>
+<!-- sound effects -->
+<audio loop id="audio">
+<source src="sound.mp3" type="audio/mpeg">
+</audio>
+
+<!-- story -->
+<div id="story">
+<h1>Galactic Quest</h1>
+<p>The year is 2127. Humankind failed to avoid climate change and is now facing imminent extinction as the Earth becomes increasingly unlivable. As mass extinctions, famine, extreme weather, and the collapse of society brings us nearer to our end, we must find a way to expand beyond Earth in order to survive. However, only the world's elite possess access to Mars, so you must find the next best life-supporting planet for humankind to move to. But only before time runs out.</p>
+<button onclick="story.remove()">> Continue</button>
+</div>
+<!-- game -->
+<div id="sky-map"></div>
+<div id="log">
+  <p>>Welcome to Galactic Quest.</p>
+</div>
+<div id="sidebar">
+  <p>Galactic Quest</p>
+  <p>Sound effects <span id="toggle" class="span-button" onclick="sound()">off</span></p>
+  <p id="funds">0 credits</p>
+  <p><span id="telescope" class="span-button">Use telescope</span><br>
+  <span id="rocket" class="span-button">Launch rocket</span><br>
+  <span id="spacestation" class="span-button">Upgrade space station</span></p>
+  <div id="planet-library"></div>
+</div>
+<script>
+var loading = document.getElementById("loading");
+var story = document.getElementById("story");
+var audio = document.getElementById("audio");
+var toggle = document.getElementById("toggle");
+var sky = document.getElementById("sky-map");
+var logContainer = document.getElementById("log");
+var planetPixels = ["white","lightgrey","grey","#282828"];
+
+setTimeout(function(){loading.remove();console.log("loaded");},2000);
+toggle.click();
+
+function sound() {
+  if (audio.paused) {
+    audio.play();
+    toggle.innerHTML = "on";
+  } else {
+    audio.pause();
+    toggle.innerHTML = "off";
+  }
+}
+
+//make planet
+function createPlanet() {
+var r = Math.floor(Math.random() * 256);
+var g = Math.floor(Math.random() * 256);
+var b = Math.floor(Math.random() * 256);
+var color = r + ", " + g + ", " + b;
+var planet = document.createElement("div");
+planet.className = "planet";
+planet.style.transform = "scale(" + (Math.random() * 0.3) + 0.85 + ")";
+planet.style.background = "rgb(" + color + ")";
+planet.style.position = "absolute";
+planet.style.top = "50%";
+planet.style.left = "50%";
+planet.style.margin = "-100px -100px";
+sky.appendChild(planet);
+var planetShadow = document.createElement("div");
+planetShadow.className = "planetShadow";
+planet.appendChild(planetShadow);
+var i = 0;
+var int = setInterval(function() {var pixel = document.createElement("div"); pixel.className = "pixel"; pixel.style.background = planetPixels[Math.floor(Math.random() * planetPixels.length)]; planet.appendChild(pixel); i++; pixel.style.position = "absolute"; pixel.style.left = Math.random() * 200 + "px"; pixel.style.bottom = Math.random() * 200 + "px"; if (i > 10) {clearInterval(int)};},0);
+}
+createPlanet();
+
+//log function
+function createLog(text) {
+var x = document.createElement("p");
+x.innerHTML = ">" + text;
+logContainer.appendChild(x);
+logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+//game controls --telescope and rocket--
+function createRocket() {
+var r = document.createElement("div");
+r.className = "rocket";
+document.body.appendChild(r);
+}
+
+//moving stars animation
+function animateStars() {
+bottomCenter();
+bottomLeft();
+bottomRight();
+topCenter();
+topLeft();
+topRight();
+}
+var starAnimationInterval = setInterval(animateStars,20);
+
+function bottomCenter() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = x + "%";a.style.bottom = "0%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+function bottomLeft() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = "0%";a.style.bottom = y/2 + "%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+function bottomRight() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = "100%";a.style.bottom = y/2 + "%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+function topCenter() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = x + "%";a.style.bottom = "100%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+function topLeft() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = "0%";a.style.bottom = 100 - y/2 + "%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+function topRight() {
+var y = Math.random() * 100;
+var x = Math.random() * 100;
+var a = document.createElement("div");
+a.className = "star";
+a.style.width = "2px";
+a.style.height = "2px";
+a.style.background = "white";
+a.style.position = "absolute";
+a.style.left = "50%";
+a.style.bottom = "50%";
+setTimeout(function() {a.style.left = "100%";a.style.bottom = 100 - y/2 + "%";}, 0);
+setTimeout(function() {a.remove();},18000);
+sky.appendChild(a);
+}
+</script>
+</body>
+</html>
