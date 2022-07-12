@@ -181,7 +181,7 @@ var username = document.getElementById("sign-in-username").value;
 var password = document.getElementById("sign-in-password").value;
   if (password == localStorage.getItem("@" + username + "/password")) {
     localStorage.setItem("user", "@" + username);
-    location.replace("app/#/@" + username);
+    location.replace("app#/@" + username);
   } else {
     alert("Password or username incorrect. Try again");
   }
