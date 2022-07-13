@@ -8,6 +8,9 @@
 <link rel="icon" href="favicon.png" type="image/png"/>
 <title>Galactic Quest</title>
 <style>
+html {
+scroll-behavior: smooth;
+}
 body {
 background: black;
 overflow: hidden;
@@ -65,6 +68,30 @@ height: 80%;
 width: 80%;
 background: black;
 border: 3px solid white;
+overflow: hidden;
+visibility: hidden;
+}
+#earth {
+position: absolute;
+top: 0px;
+left: 0px;
+height: 80%;
+width: 80%;
+background: black;
+border: 3px solid white;
+overflow: hidden;
+visibility: hidden;
+}
+#telescope-map {
+position: absolute;
+top: 0px;
+left: 0px;
+height: 80%;
+width: 80%;
+background: black;
+border: 3px solid white;
+overflow: hidden;
+visibility: visible;
 }
 #log {
 position: absolute;
@@ -134,17 +161,28 @@ background: transparent;
 .star {
 transition: left 20s, bottom 20s;
 }
-.rocket {
-width: 0px; 
-height: 0px; 
-border-left: 50px solid transparent;
-border-right: 50px solid transparent;
-border-bottom: 50px solid grey;
+#r {
+width: 400px; 
+height: 400px; 
 position: absolute;
-top: 55%;
+top: 50%;
 left: 50%;
-margin-left: -50px;
+margin: -200px;
 z-index: 2;
+transform: rotate(0deg);
+transition: transform 1s;
+}
+#lens {
+position: absolute;
+top: 50%;
+left: 50%;
+height: 200px;
+width: 200px;
+border-radius: 50%;
+border: 2px solid white;
+margin: -100px;
+transition: left 0.5s, top 0.5s;
+visibility: hidden;
 }
 </style>
 </head>
@@ -160,11 +198,16 @@ z-index: 2;
 <!-- story -->
 <div id="story">
 <h1>Galactic Quest</h1>
-<p>The year is 2127. Humankind failed to avoid climate change and is now facing imminent extinction as the Earth becomes increasingly unlivable. As mass extinctions, famine, extreme weather, and the collapse of society brings us nearer to our end, we must find a way to expand beyond Earth in order to survive. However, only the world's elite possess access to Mars, so you must find the next best life-supporting planet for humankind to move to. But only before time runs out.</p>
+<p>The year is 2127. Humankind failed to avoid climate change and is now facing imminent extinction as the Earth becomes increasingly uninhabitable. As mass extinctions, famine, extreme weather, and the collapse of society brings us nearer to our end, we must find a way to expand beyond Earth in order to survive. However, only the world's elite possess access to Mars, so you must find the next best life-supporting planet for humankind to move to. But only before time runs out.</p>
 <button onclick="story.remove()">> Continue</button>
 </div>
 <!-- game -->
 <div id="sky-map"></div>
+<div id="earth"></div>
+<div id="telescope-map">
+  <div id="lens"></div>
+</div>
+
 <div id="log">
   <p>>Welcome to Galactic Quest.</p>
 </div>
@@ -172,7 +215,8 @@ z-index: 2;
   <p>Galactic Quest</p>
   <p>Sound effects <span id="toggle" class="span-button" onclick="sound()">off</span></p>
   <p id="funds">0 credits</p>
-  <p><span id="telescope" class="span-button">Use telescope</span><br>
+  <p>Space Station LVL 0</p>
+  <p><span id="telescope" class="span-button" onclick="tele()">Use telescope</span><br>
   <span id="rocket" class="span-button">Launch rocket</span><br>
   <span id="spacestation" class="span-button">Upgrade space station</span></p>
   <div id="planet-library"></div>
@@ -183,9 +227,13 @@ var story = document.getElementById("story");
 var audio = document.getElementById("audio");
 var toggle = document.getElementById("toggle");
 var sky = document.getElementById("sky-map");
+var telescopeMap = document.getElementById("telescope-map");
+var earth = document.getElementById("earth");
 var logContainer = document.getElementById("log");
+var lens = document.getElementById("lens");
+var funds = document.getElementById("funds");
 var planetPixels = ["white","lightgrey","grey","#282828"];
-
+var syllables = ["un","an","in","tr","ium","io","eo","eos","tan","plu","ria","stan","wa","qua","z"];
 setTimeout(function(){loading.remove();console.log("loaded");},2000);
 toggle.click();
 
@@ -220,7 +268,6 @@ planet.appendChild(planetShadow);
 var i = 0;
 var int = setInterval(function() {var pixel = document.createElement("div"); pixel.className = "pixel"; pixel.style.background = planetPixels[Math.floor(Math.random() * planetPixels.length)]; planet.appendChild(pixel); i++; pixel.style.position = "absolute"; pixel.style.left = Math.random() * 200 + "px"; pixel.style.bottom = Math.random() * 200 + "px"; if (i > 10) {clearInterval(int)};},0);
 }
-createPlanet();
 
 //log function
 function createLog(text) {
@@ -230,12 +277,15 @@ logContainer.appendChild(x);
 logContainer.scrollTop = logContainer.scrollHeight;
 }
 
-//game controls --telescope and rocket--
+//telescope and rocket
 function createRocket() {
 var r = document.createElement("div");
-r.className = "rocket";
-document.body.appendChild(r);
+r.id = "r";
+r.innerHTML = "<svg height='50' width='50' style='transform:rotate(180deg);margin:350px 175px;'><polygon points='50,0 25,50 0,0' style='fill:grey;'/></svg>";
+r.style.transform = "rotate(0deg)";
+sky.appendChild(r);
 }
+createRocket();
 
 //moving stars animation
 function animateStars() {
@@ -246,7 +296,6 @@ topCenter();
 topLeft();
 topRight();
 }
-var starAnimationInterval = setInterval(animateStars,20);
 
 function bottomCenter() {
 var y = Math.random() * 100;
@@ -338,6 +387,60 @@ setTimeout(function() {a.style.left = "100%";a.style.bottom = 100 - y/2 + "%";},
 setTimeout(function() {a.remove();},18000);
 sky.appendChild(a);
 }
+
+//rocket and telescope controls
+document.body.onkeyup = function(e) {  
+    if (e.code == "ArrowRight") {
+        rocketCW();
+    } else if (e.code == "ArrowLeft") {
+        rocketCCW();
+    } else if (e.code == "KeyW") {
+        lens.style.top = lens.style.top.split("%")[0] - 5 + "%";
+    } else if (e.code == "KeyS") {
+        lens.style.top = +lens.style.top.split("%")[0] + 5 + "%";
+    } else if (e.code == "KeyA") {
+        lens.style.left = lens.style.left.split("%")[0] - 5 + "%";
+    } else if (e.code == "KeyD") {
+        lens.style.left = +lens.style.left.split("%")[0] + 5 + "%";
+    }
+}
+function rocketCW() {
+var rocket = document.getElementById("r");
+var degree = +rocket.style.transform.split("(")[1].split("deg")[0] - 90;
+rocket.style.transform = "rotate(" + degree + "deg)";
+}
+function rocketCCW() {
+var rocket = document.getElementById("r");
+var degree = +rocket.style.transform.split("(")[1].split("deg")[0] + 90;
+rocket.style.transform = "rotate(" + degree + "deg)";
+}
+
+
+var planetDiscovery;
+function tele() {
+if (telescope.innerHTML == "Use telescope") {
+sky.style.visibility = "hidden";
+earth.style.visibility = "hidden";
+telescopeMap.style.visibility = "visible";
+createLog("Telescope in use.");
+lens.style.visibility = "visible";
+planetDiscovery = setInterval(function(){var q = document.createElement("div");  q.style.width = "6px"; q.style.height = "6px"; q.style.background = "white"; q.style.position = "absolute"; q.style.left = lens.style.left; q.style.top = lens.style.top; q.id = syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)]; q.title = "Planet: " + q.id; telescopeMap.appendChild(q); createLog("New location discovered: " + q.id + "."); var grant = Math.floor(Math.random()*12); funds.innerHTML = +funds.innerHTML.split(" ")[0] + grant + " credits"; funds.style.color = "green"; createLog(grant + " credits for discovery granted.");}, 15000);
+telescope.innerHTML = "Close telescope";
+} else {
+lens.style.visibility = "hidden";
+telescope.innerHTML = "Use telescope";
+clearInterval(planetDiscovery);
+createLog("Telescope closed.");
+}
+}
+
+var starAnimationInterval = setInterval(animateStars,20);
+
+//game beginning
+createLog("Discover deep space by clicking \"Use telescope\". Control lens with keys W A S D.");
+lens.style.top = "50%";
+lens.style.left = "50%";
+
 </script>
 </body>
 </html>
