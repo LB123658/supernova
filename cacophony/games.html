@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+<link rel="icon" href="favicon.png" type="image/png"/>
+<title>Cacophony gaming</title>
+<style>
+body {
+background: #2f3136;
+color: #dcddde;
+font-family: 'PT Sans', sans-serif;
+}
+:focus {
+outline: none;
+}
+::selection {
+background: #5869ea;
+}
+.dark {
+background: #202325;
+}
+.accent {
+background: #5869ea;
+}
+button {
+height: 40px;
+border-radius: 5px;
+padding-left: 10px;
+padding-right: 10px;
+margin: 5px;
+font-size: 22px;
+border: none;
+transition: background 0.4s, border-radius 0.4s;
+cursor: pointer;
+color: #dcddde;
+font-size: 20px;
+background: #535761;
+font-family: 'PT Sans', sans-serif;
+}
+button:hover {
+background: #43464d;
+}
+input {
+background: #202325;
+height: 40px;
+font-size: 22px;
+border-radius: 5px;
+cursor: default;
+border: none;
+color: #dcddde;
+font-family: 'PT Sans', sans-serif;
+font-size: 22px;
+}
+input:focus {
+cursor: auto;
+}
+h1 {
+font-size: 40px;
+}
+p {
+font-size: 20px;
+}
+a {
+color: grey;
+text-decoration: none;
+transition: color 0.4s;
+}
+a:hover {
+color: #dcddde;
+}
+.off {
+pointer-events: none;
+opacity: 0.6;
+}
+
+#top {
+position: fixed;
+top: 0px;
+left: 0px;
+height: 60px;
+width: 100%;
+z-index: 1;
+}
+#top button {
+margin: 10px;
+}
+#personal-info {
+position: absolute;
+top: 0px;
+right: 0px;
+width: 60px;
+height: 60px;
+}
+#account {
+position: absolute;
+top: 0px;
+right: 0px;
+}
+#personal-content {
+position: fixed;
+top: 60px;
+right: 0px;
+width: 280px;
+height: 160px;
+border-radius: 0px 0px 0px 5px;
+background: #202325;
+padding: 0px 10px 10px 10px;
+visibility: hidden;
+user-select: none;
+-webkit-user-select: none;
+}
+#personal-info:hover #personal-content {
+visibility: visible;
+}
+#personal-content:hover {
+visibility: visible;
+}
+
+#games {
+width: 90%;
+margin: 100px 5%;
+}
+.post {
+padding: 1px 5px 1px 5px;
+margin: 10px -5px;
+border-radius: 5px;
+}
+</style>
+</head>
+<body>
+<div id="top" class="dark">
+  <button class="accent" onclick="location.reload()">Cacophony Games</button>
+  <button>All Games</button>
+  <button class="off">Library</button>
+  <!-- personal info -->
+  <div id="personal-info">
+    <button id="account"><span class="material-icons" style="margin-top:4px">account_circle</span></button>
+    <div id="personal-content">
+      <p>Unable to load your account.</p>
+    </div>
+  </div>
+</div>
+
+<!-- games -->
+<div id="games"></div>
+<script src="https://lb123658.github.io/supernova/app-window.js"></script>
+<script>
+var user = localStorage.getItem("user");
+var personalContent = document.getElementById("personal-content");
+var games = document.getElementById("games");
+
+//load account section
+personalContent.innerHTML = "<h2><span class='accent' style='padding:5px;border-radius:5px;'>" + user + "</span><br><p>Contact<br>&nbsp;&nbsp;<a href='tel:" + localStorage.getItem(user + "/number") + "'>Call number <span class='material-icons' style='transform:translateY(5px)'>call</span></a><br>&nbsp;&nbsp;<a href='mailto:" + localStorage.getItem(user + "/email") + "' target='_blank'>Email <span class='material-icons' style='transform:translateY(5px)'>mail</span></a></p></h2>";
+
+function post(content) {
+games.innerHTML = games.innerHTML + "<div class='post dark'>" + content + "</div>";
+}
+
+post("<h2>Featured games<h2>");
+post("<h2>Galactic Quest</h2><p>Explore the galaxy and find habitable planets. Coming soon.</p><a href='https://lb123658.github.io/supernova/quest/index.html' target='_blank'><button>Play now</button></a>");
+</script>
+</body>
+</html>
