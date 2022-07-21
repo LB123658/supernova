@@ -184,6 +184,9 @@ margin: -100px;
 transition: left 0.5s, top 0.5s;
 visibility: hidden;
 }
+.obstacle {
+transition: left 2s, bottom 2s;
+}
 </style>
 </head>
 <body>
@@ -198,7 +201,7 @@ visibility: hidden;
 <!-- story -->
 <div id="story">
 <h1>Galactic Quest</h1>
-<p>The year is 2127. Humankind failed to avoid climate change and is now facing imminent extinction as the Earth becomes increasingly uninhabitable. As mass extinctions, famine, extreme weather, and the collapse of society brings us nearer to our end, we must find a way to expand beyond Earth in order to survive. However, only the world's elite possess access to Mars, so you must find the next best life-supporting planet for humankind to move to. But only before time runs out.</p>
+<p>The year is 2050. Humankind failed to avoid climate change and is now facing imminent extinction as the Earth becomes increasingly uninhabitable. As mass extinctions, famine, extreme weather, and the collapse of society brings us nearer to our end, we must find a way to expand beyond Earth in order to survive. However, only the world's elite possess access to Mars, so you must find the next best life-supporting planet for humankind to move to. But only before time runs out.</p>
 <button onclick="story.remove()">> Continue</button>
 </div>
 <!-- game -->
@@ -215,9 +218,8 @@ visibility: hidden;
   <p>Galactic Quest</p>
   <p>Sound effects <span id="toggle" class="span-button" onclick="sound()">off</span></p>
   <p id="funds">0 credits</p>
-  <p>Space Station LVL 0</p>
   <p><span id="telescope" class="span-button" onclick="tele()">Use telescope</span><br>
-  <span id="rocket" class="span-button">Launch rocket</span><br>
+  <span id="rocket" class="span-button" onclick="launchRocket()">Launch rocket</span><br>
   <span id="spacestation" class="span-button">Upgrade space station</span></p>
   <div id="planet-library"></div>
 </div>
@@ -389,6 +391,8 @@ sky.appendChild(a);
 }
 
 //rocket and telescope controls
+var starAnimationInterval;
+
 document.body.onkeyup = function(e) {  
     if (e.code == "ArrowRight") {
         rocketCW();
@@ -424,7 +428,7 @@ earth.style.visibility = "hidden";
 telescopeMap.style.visibility = "visible";
 createLog("Telescope in use.");
 lens.style.visibility = "visible";
-planetDiscovery = setInterval(function(){var q = document.createElement("div");  q.style.width = "6px"; q.style.height = "6px"; q.style.background = "white"; q.style.position = "absolute"; q.style.left = lens.style.left; q.style.top = lens.style.top; q.id = syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)]; q.title = "Planet: " + q.id; telescopeMap.appendChild(q); createLog("New location discovered: " + q.id + "."); var grant = Math.floor(Math.random()*12); funds.innerHTML = +funds.innerHTML.split(" ")[0] + grant + " credits"; funds.style.color = "green"; createLog(grant + " credits for discovery granted.");}, 15000);
+planetDiscovery = setInterval(function(){var q = document.createElement("div");  q.style.width = "6px"; q.style.height = "6px"; q.style.background = "white"; q.style.position = "absolute"; q.style.left = lens.style.left; q.style.top = lens.style.top; q.id = syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)] + syllables[Math.round(Math.random()*syllables.length)]; q.title = "Planet: " + q.id; q.onclick = function(){selectPlanet(this.id)}; telescopeMap.appendChild(q); createLog("New location discovered: " + q.id + "."); var grant = Math.floor(Math.random()*12); funds.innerHTML = +funds.innerHTML.split(" ")[0] + grant + " credits"; funds.style.color = "green"; createLog(grant + " credits for discovery granted.");}, 15000);
 telescope.innerHTML = "Close telescope";
 } else {
 lens.style.visibility = "hidden";
@@ -434,13 +438,99 @@ createLog("Telescope closed.");
 }
 }
 
+function launchRocket() {
+  if (funds.innerHTML.split(" ")[0] > 9) {
+    createLog("Select which planet to fly to by clicking on it on the screen.");
+  } else {
+    createLog("Insufficient funds to launch rocket. Requires at least 10 credits.");
+  }
+}
+function selectPlanet(title) {
+  if (funds.innerHTML.split(" ")[0] > 9) {
+    createLog(title + " has been selected.");
+    beginFlight(title);
+  } else {
+    createLog("Insufficient funds to launch rocket. Requires at least 10 credits.");
+  }
+}
+var obstacles;
+function beginFlight(title) {
+sky.style.visibility = "visible";
+earth.style.visibility = "hidden";
+telescopeMap.style.visibility = "hidden";
+funds.innerHTML = +funds.innerHTML.split(" ")[0] - 10 + " credits";
+funds.style.color = "red";
+obstacles = setInterval(launchObstacle, (Math.random() * 5000) + 2000);
+var trajectory = title;
 var starAnimationInterval = setInterval(animateStars,20);
+}
+var direction;
+function launchObstacle() {
+direction = Math.round(Math.random() * 4);
+console.log(direction);
+var o = document.createElement("div");
+o.className = "obstacle";
+o.style.width = "8px";
+o.style.height = "8px";
+o.style.background = "red";
+o.style.position = "absolute";
+o.style.left = "50%";
+o.style.bottom = "50%";
+if (direction == 1) {
+setTimeout(function() {o.style.left = "50%";o.style.bottom = "0%";checkDeath("1");}, 4100);
+createLog("Below.");
+} else if (direction == 2) {
+setTimeout(function() {o.style.left = "100%";o.style.bottom = "50%";checkDeath("2");
+}, 4100);
+createLog("Right.");
+} else if (direction == 3) {
+setTimeout(function() {o.style.left = "50%";o.style.bottom = "100%";checkDeath("3");}, 4100);
+createLog("Above.");
+} else {
+setTimeout(function() {o.style.left = "0%";o.style.bottom = "50%";checkDeath("4");}, 4100);
+createLog("Left.");
+}
+setTimeout(function() {o.remove();}, 7000);
+setTimeout(function(){sky.appendChild(o);}, 4000);
+}
+
+function checkDeath(pos) {
+  if (direction == pos) {
+    death();
+  }
+}
+function death() {
+function draw(color) {
+var v = document.createElement("div");
+v.style.background = color;
+v.style.width = Math.random() * 10 + "%";
+v.style.height = Math.random() * 10 + "%";
+v.style.position = "absolute";
+v.style.left = Math.random() * 100 + "%";
+v.style.bottom = Math.random() * 100 + "%";
+setTimeout(function() {v.remove();},100);
+sky.appendChild(v);
+clearInterval(starAnimationInterval);
+clearInterval(obstacles);
+document.getElementById("r").style.visibility = "hidden";
+}
+function drawing() {
+var shade = ["red","orange","yellow","white"];
+draw(shade[Math.floor(Math.random() * 8)]);
+}
+var begin = setInterval(drawing, 0);
+setTimeout(function(){clearInterval(begin);}, 5000);
+}
 
 //game beginning
 createLog("Discover deep space by clicking \"Use telescope\". Control lens with keys W A S D.");
 lens.style.top = "50%";
 lens.style.left = "50%";
 
+//TO DO rocket obstacle checker does not always work. sometimes rocket explodes no hitting anything but sometimes it works.
 </script>
+
+<!-- pwa script -->
+<script src="script.js"></script>
 </body>
 </html>
