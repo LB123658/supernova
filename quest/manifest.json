@@ -1,0 +1,22 @@
+{
+	"name":"Galactic Quest",
+	"short_name":"Galactic Quest",
+	"start_url":"index.html",
+	"display":"standalone",
+	"background_color":"black",
+	"theme_color":"black",
+	"scope": ".",
+	"description":"Play Galactic Quest.",
+	"icons":[
+	{
+	"src":"sphere.png",					
+	"sizes":"192x192",
+	"type":"image/png"
+	},
+	{
+	"src":"sphere.png",
+	"sizes":"512x512",
+	"type":"image/png"
+	}
+]
+}
